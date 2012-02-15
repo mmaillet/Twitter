@@ -12,8 +12,14 @@ class PostsController < ApplicationController
       if @post.save  
         format.json { render :json => @post, :include => { :user => { :only => [:username] } } }
       else  
-        flash[:notice] = "Message failed to save."  
-        format.html { redirect_to posts_path }  
+        flash[:notice] = "Message failed to save."
+		format.jsonr do
+		render :status => 400, :json => {
+		:status => :error,
+		
+		:html => ""
+		}.to_json
+		end 
       end  
     end  
   end
