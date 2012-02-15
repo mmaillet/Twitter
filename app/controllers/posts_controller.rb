@@ -10,7 +10,7 @@ class PostsController < ApplicationController
     @post = Post.create(:message => params[:message], :user_id => current_user.id)  
     respond_to do |format|  
       if @post.save  
-        format.html { redirect_to posts_path }  
+        format.json { render :json => @post, :include => { :user => { :only => [:username] } } }
       else  
         flash[:notice] = "Message failed to save."  
         format.html { redirect_to posts_path }  

@@ -1,60 +1,54 @@
 var socket = io.connect('http://localhost:1188');
 
-socket.on('realtime_post', function (data)
+socket.on('realtime_post', function (data) {
+realtime_tweet_add(data);
+});
+
+function send_tweet(tweet_message, token)
 {
-	realtime_post_add(data);
+hide_error();
+
+$.post('http://localhost:3000/posts',
+{message: tweet_message, authenticity_token: token},
+function(data) {
+$('#txt_message').val('');
+socket.emit('post', data);
+})
+.error(function() {
+display_error('Le message doit etre compris entre 1 et 140 caracteres');
+});
 }
 
-function sendPost(message, token)
+
+var tweetsRealTime = new Array();
+
+function realtime_tweet_add(tweet)
 {
-	hide.error();
-	$.post('http://localhost:3000/posts',
-	{
-		message: message, authenticity_token: token
-	}, function(data)
-	{
-		$('#txt_message').val('');
-		socket.emit('post', data);
-	}).error(function()
-	{
-		display_error('The message length must be between 1 and 140');
-	});
+tweetsRealTime.push(tweet);
+var div_realtime = $('#realtime_count');
+div_realtime.html(tweetsRealTime.length + ' new post(s)');
+div_realtime.fadeIn();
 }
 
-var postRealTime = new Array();
-
-function realtime_post_add(post)
-{
-	postRealTime.push(post);
-	var div realtime = $('#realtime_count');
-	div realtime.html(postRealTime.length + " new post(s)");
-	div realtime.fadeIn();
-}
-
-function display_realtime_posts()
+function display_realtime_tweets()
 {
 $('#realtime_count').fadeOut();
 $('#realtime_count').html('');
 
-$.each(postRealTime, function() {
-var div_realtime = $('#posts');
-div_realtime.prepend(create_post(this)).hide().slideDown();
+$.each(tweetsRealTime, function() {
+var div_realtime = $('#realtime_unread_tweets');
+div_realtime.prepend(create_tweet(this)).hide().slideDown();
 
 });
 
-postRealTime = new Array();
+tweetsRealTime = new Array();
 }
 
-function create_post(post)
+function create_tweet(post)
 {
-return '<div class="post">' +
-'<p>' +
-'<a href="/posts/' + post.user.username + '" class="post_username">' + post.user.username + '</a>' +
-'<br />' +
-post.message +
-'</p>' +
-'<p class="posted_date">' + post.created_at + '</p>' +
-'</div>';
+return '<p>' +
+'<b>Posted ' + jQuery.timeago(post.created_at) + ' by <a href="/posts/' + post.user.username + '" >' + post.user.username + '</a></b></p>' +  
+'<p>' + post.message + '</p>';
 }
 
 function display_error(error)
@@ -69,10 +63,33 @@ $('#errors').html('');
 $('#errors').fadeOut();
 }
 
-$('#realtime_count').click(display_realtime_posts);
+function time_ago_in_words(from) {
+   return distance_of_time_in_words(new Date().getTime(), from)
+  }
+
+  function distance_of_time_in_words(to, from) {
+    seconds_ago = ((to  - from) / 1000);
+    minutes_ago = Math.floor(seconds_ago / 60)
+
+    if(minutes_ago == 0) { return "less than a minute";}
+    if(minutes_ago == 1) { return "a minute";}
+    if(minutes_ago < 45) { return minutes_ago + " minutes";}
+    if(minutes_ago < 90) { return " about 1 hour";}
+    hours_ago  = Math.round(minutes_ago / 60);
+    if(minutes_ago < 1440) { return "about " + hours_ago + " hours";}
+    if(minutes_ago < 2880) { return "1 day";}
+    days_ago  = Math.round(minutes_ago / 1440);
+    if(minutes_ago < 43200) { return days_ago + " days";}
+    if(minutes_ago < 86400) { return "about 1 month";}
+    months_ago  = Math.round(minutes_ago / 43200);
+    if(minutes_ago < 525960) { return months_ago + " months";}
+    if(minutes_ago < 1051920) { return "about 1 year";}
+    years_ago  = Math.round(minutes_ago / 525960);
+    return "over " + years_ago + " years"
+  }
+
+$('#realtime_count').click(display_realtime_tweets);
 $('#submit_message').click(function() {
-send_post($('#txt_message').val(), $('meta[name=csrf-token]').attr('content'));
+send_tweet($('#txt_message').val(), $('input[name$="authenticity_token"]').val());
 return false;
 });
-
-)

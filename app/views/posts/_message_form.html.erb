@@ -1,7 +1,7 @@
 <% if logged_in? %>  
 	<%= form_tag(:controller => "posts", :action => "create") do %>  
 	  <%= label_tag(:message, "What are you doing?") %><br />  
-	  <%= text_area_tag(:message, nil, :size => "44x6") %><br />  
-	  <%= submit_tag("Update") %>  
+	  <%= text_area_tag(:message, nil, :size => "44x6", :id => "txt_message") %><br />  
+	  <%= submit_tag("Update", :id => "submit_message") %>  
 	<% end %>
 <% end %>

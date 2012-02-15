@@ -8,8 +8,9 @@ io.sockets.on('connection', function (socket)
 {
 	socket.on('post', function (data)
 	{
-		socket.emit('reatime post', data);
-		socket.broadcast.emit('reatime post', data);
+		console.dir(data);
+		socket.emit('realtime_post', data);
+		socket.broadcast.emit('realtime_post', data);
 	}
 	);
 }

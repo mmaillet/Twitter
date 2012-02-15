@@ -1,4 +1,19 @@
-    <b><%= render :partial => "message_form" %></b>  
+    <% title "Looks like tweets" %>
+
+	<% if logged_in? %>
+	<div id="errors"></div>
+	<b><%= render :partial => "message_form" %></b>  
+	<% end %>
+
+	<div style="height: 60px">
+	<div id="realtime_count"></div>
+	</div>
+
+	<div id="realtime_unread_tweets">
+
+	</div>
     <%= render :partial => @posts %>
 	<script type="text/javascript" src="http://localhost:1188/socket.io/socket.io.js"></script>
+	<%= javascript_include_tag :jquery %>
+	<%= javascript_include_tag :timeago %>
 	<%= javascript_include_tag :realtime_post %>
