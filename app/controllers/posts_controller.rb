@@ -17,4 +17,13 @@ class PostsController < ApplicationController
       end  
     end  
   end
+  
+  def show  
+	@id_user = User.find_by_username(params[:id])
+	@posts = Post.all(:conditions => { :user_id => @id_user }, :order => "created_at DESC")
+	@username = @posts.first().user.username
+    respond_to do |format|  
+      format.html  
+    end  
+  end  
 end

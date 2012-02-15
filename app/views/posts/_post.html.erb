@@ -1,4 +1,4 @@
-    <p><b>Posted <%= time_ago_in_words(post.created_at) %> ago by <%= post.user.username %></b></p>  
+    <p><b>Posted <%= time_ago_in_words(post.created_at) %> ago by <%= link_to post.user.username, posts_path + '/' + post.user.username %></b></p>  
     <p>
 		<%= post.message %>
 	</p>  

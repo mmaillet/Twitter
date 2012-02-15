@@ -32,4 +32,8 @@ class User < ActiveRecord::Base
       self.password_hash = encrypt_password(password)
     end
   end
+  
+  def find_by_username(login)
+    return find_by_username(login)
+  end
 end
