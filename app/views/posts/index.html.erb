@@ -1,2 +1,4 @@
     <b><%= render :partial => "message_form" %></b>  
     <%= render :partial => @posts %>
+	<script type="text/javascript" src="http://localhost:1188/socket.io/socket.io.js"></script>
+	<%= javascript_include_tag :realtime_post %>
