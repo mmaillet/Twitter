@@ -15,7 +15,7 @@ $('#txt_message').val('');
 socket.emit('post', data);
 })
 .error(function() {
-display_error('Le message doit etre compris entre 1 et 140 caracteres');
+display_error('The post should be between 1 and 140 characters');
 });
 }
 
